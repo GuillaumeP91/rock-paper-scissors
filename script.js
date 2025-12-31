@@ -2,7 +2,6 @@ console.log ("Hello Worldie")
 
 function getComputerChoice () {
     let computerChoice = Math.random();
-    console.log(computerChoice);
 
     if (computerChoice >= 0.67) {
         return "rock";
