@@ -1,5 +1,17 @@
 console.log ("Hello Worldie")
 
+const body = document.querySelector("body");
+
+const scoreDisplay = document.createElement("h2");
+scoreDisplay.textContent = "Score -> Human: 0, Computer: 0";
+body.appendChild(scoreDisplay);
+
+const resultsLog = document.createElement("div");
+resultsLog.textContent = "First to 5 points wins! Click a button to play.";
+resultsLog.style.marginTop = "20px";
+resultsLog.style.fontWeight = "bold";
+body.appendChild(resultsLog);
+
 function getComputerChoice () {
     let computerChoice = Math.random();
 
@@ -11,19 +23,18 @@ function getComputerChoice () {
     }
 }
 
-function getHumanChoice () {
-    let humanChoice = prompt("Rock, Paper or Scissors ?");
-    return humanChoice;
-}
-
 let humanScore = 0;
 let computerScore = 0;
 
 function playRound (humanChoice, computerChoice) {
+    if (humanScore >= 5 || computerScore >= 5) return;
+    
     humanChoice = humanChoice.toLowerCase();
 
+    let message = "";
+
     if (humanChoice === computerChoice) {
-        console.log (`It's a tie ! Both chose ${humanChoice}`);
+        message = `It's a tie ! Both chose ${humanChoice}`;
         return;
     }
 
@@ -33,18 +44,28 @@ function playRound (humanChoice, computerChoice) {
         (humanChoice === "scissors" && computerChoice === "paper")
     ) {
         humanScore++;
-        console.log(`You win ! ${humanChoice} beats ${computerChoice}`);
+        message = `You win ! ${humanChoice} beats ${computerChoice}`;
     } else {
         computerScore++;
-        console.log(`You lose ! ${computerChoice} beats ${humanChoice}`);
+        message = `You lose ! ${computerChoice} beats ${humanChoice}`;
     }
-    console.log(`Score -> Human: ${humanScore}, Computer: ${computerScore}`);
+    resultsLog.textContent = message;
+    scoreDisplay.textContent = `Score -> Human: ${humanScore}, Computer: ${computerScore}`;
+   
+    if (humanScore === 5) {
+        resultsLog.textContent = "CONGRATS! You won the match!";
+        resultsLog.style.color = "green";
+    } else if (computerScore === 5) {
+        resultsLog.textContent = "GAME OVER! The computer won.";
+        resultsLog.style.color = "red";
+    }
 }
 
-
-playGame();
-
-
-
-
-
+const buttons = document.querySelectorAll('button');
+buttons.forEach((button) => {
+    button.addEventListener('click', function(){
+        const humanSelection = button.textContent;
+        const computerSelection = getComputerChoice();
+        playRound(humanSelection, computerSelection);
+    });
+});
